@@ -28,16 +28,16 @@ app = FastAPI(
 @app.post("/log-url", response_model=URLResponse)
 async def log_url(request: URLRequest):
     """
-    Endpoint per ricevere e loggare una URL valida
+    Endpoint to receive and log a valid URL
     
     Args:
-        request: Oggetto contenente l'URL da validare e loggare
+        request: Object containing the URL to validate and log
         
     Returns:
-        URLResponse: Conferma dell'operazione con dettagli
+        URLResponse: Operation confirmation with details
         
     Raises:
-        HTTPException: Se l'URL non è valida
+        HTTPException: If the URL is not valid
     """
     try:
         # L'URL è già validata da Pydantic tramite HttpUrl
