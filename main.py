@@ -5,14 +5,15 @@ from datetime import datetime
 import uvicorn
 import os
 from models import URLRequest, URLResponse
-from services import EpubService
+from services import EpubService, HtmlService
+import uuid
+from pathvalidate import sanitize_filename
 
 # Configurazione del logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        # logging.FileHandler('url_logs.log'),
         logging.StreamHandler()
     ]
 )
@@ -32,6 +33,9 @@ if output_dir:
     epub_service = EpubService(output_directory=output_dir)
 else:
     epub_service = EpubService()
+
+# Html service initialization
+html_service = HtmlService()
 
 @app.post("/convert-url-to-file", response_model=URLResponse)
 async def convert_url_to_file(request: URLRequest):
@@ -56,7 +60,9 @@ async def convert_url_to_file(request: URLRequest):
         logger.info(f"URLs ricevute e validate: {url_strings}")
 
         # Convert URLs to EPUB using the service
-        filename = "Web Articles Collection"
+        title = html_service.get_page_title(url_strings[0])
+        filename = f'{uuid.uuid4()}-{title}' if title else uuid.uuid4()
+        filename = sanitize_filename(filename)
         epub_path = epub_service.urls_to_epub(url_strings, filename)
 
         return URLResponse(
