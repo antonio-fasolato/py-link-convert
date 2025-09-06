@@ -86,4 +86,8 @@ async def health_check():
     return {"status": "OK", "timestamp": datetime.now().isoformat()}
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    # Ottenimento parametri host e port dalle variabili d'ambiente
+    host = os.getenv('UVICORN_HOST', '0.0.0.0')
+    port = int(os.getenv('UVICORN_PORT', '8000'))
+    
+    uvicorn.run("main:app", host=host, port=port, reload=True)

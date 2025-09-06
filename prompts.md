@@ -7,3 +7,4 @@
 - Aggiungi una classe di service, chiamata EpubService con il metodo pubblico url_to_epub
 - Modifica l'endpoint convert-url-to-file per accettare una lista di url. La validazione va fatta su tutte le url della lista. L'endpoint deve continuare solo se tutte le url sono valide. Il servizio epub_service va modificato per accettare una lista di url e generare il file epub aggiungendo un capitolo per ogni url.
 - Nel file main.py, nell'inizializzazione del servizio EpubService passa il parametro output_directory leggendolo dalla variabile d'ambiente OUTPUT_DIRECTORY. Se la variabile non e' definita non passare nulla in modo da usare il default definito nella classe EpubService. Cambia il default della classe EpubService in modo che output_directory sia la cartella corrente.
+- Nel file main.py, prendi i parametri di uvicorn.run host e port da due varibili d'ambiente chiamate UVICOORN_HOST e UVICORN_PORT. Se non sono definite usa i valori attualmente definiti nel file.
