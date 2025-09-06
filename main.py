@@ -25,11 +25,6 @@ app = FastAPI(
     version="1.0.0"
 )
 
-@app.get("/")
-async def root():
-    """Endpoint di benvenuto"""
-    return {"message": "Benvenuto nell'API URL Logger"}
-
 @app.post("/log-url", response_model=URLResponse)
 async def log_url(request: URLRequest):
     """
