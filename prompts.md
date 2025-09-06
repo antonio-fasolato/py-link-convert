@@ -4,3 +4,4 @@
 - Traduci il file readme in inglese
 - Estrai le classi URLRequest e URLResponse in due file separati
 - Traduci in inglese la documentazione del metodo log_url
+- Aggiungi una classe di service, chiamata EpubService con il metodo pubblico url_to_epub

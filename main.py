@@ -3,8 +3,8 @@ from pydantic import ValidationError
 import logging
 from datetime import datetime
 import uvicorn
-import xml2epub
 from models import URLRequest, URLResponse
+from services import EpubService
 
 # Configurazione del logging
 logging.basicConfig(
@@ -24,6 +24,9 @@ app = FastAPI(
     description="REST API to convert a url to an Epub document",
     version="1.0.0"
 )
+
+# Inizializzazione del servizio EPUB
+epub_service = EpubService()
 
 @app.post("/convert-url-to-file", response_model=URLResponse)
 async def convert_url_to_file(request: URLRequest):
@@ -47,15 +50,12 @@ async def convert_url_to_file(request: URLRequest):
         # Log dell'URL
         logger.info(f"URL ricevuta e validata: {url_str}")
 
-        ## create an empty eBook, with toc located at the beginning
-        filename = "My New E-book Name"
-        book = xml2epub.Epub(filename, toc_location="beginning")
-        chapter1 = xml2epub.create_chapter_from_url(url_str)
-        book.add_chapter(chapter1)
-        book.create_epub("/Users/antonio.fasolato/tmp")
+        # Convert URL to EPUB using the service
+        filename = "Web Article"
+        epub_path = epub_service.url_to_epub(url_str, filename)
 
         return URLResponse(
-            message="URL loggata con successo",
+            message="URL converted to EPUB successfully",
             url=url_str,
             timestamp=timestamp,
             filename=filename
