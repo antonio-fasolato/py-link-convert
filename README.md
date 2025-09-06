@@ -1,74 +1,74 @@
 # URL Logger API
 
-API REST Python per validare e loggare URL utilizzando FastAPI.
+Python REST API to validate and log URLs using FastAPI.
 
-## Caratteristiche
+## Features
 
-- ✅ Validazione automatica delle URL usando Pydantic
-- 📝 Logging delle URL in file e console
-- 🚀 Framework FastAPI per performance elevate
-- 📚 Documentazione automatica con Swagger UI
+- ✅ Automatic URL validation using Pydantic
+- 📝 URL logging to file and console
+- 🚀 FastAPI framework for high performance
+- 📚 Automatic documentation with Swagger UI
 - ❤️ Health check endpoint
 
-## Installazione
+## Installation
 
-1. Clona o scarica il progetto
-2. Installa le dipendenze:
+1. Clone or download the project
+2. Install dependencies:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-## Avvio dell'API
+## Starting the API
 
 ```bash
 python main.py
 ```
 
-L'API sarà disponibile su: `http://localhost:8000`
+The API will be available at: `http://localhost:8000`
 
-## Endpoints Disponibili
+## Available Endpoints
 
 ### POST /log-url
-Valida e logga una URL.
+Validates and logs a URL.
 
-**Richiesta:**
+**Request:**
 ```json
 {
   "url": "https://example.com"
 }
 ```
 
-**Risposta (200):**
+**Response (200):**
 ```json
 {
-  "message": "URL loggata con successo",
+  "message": "URL logged successfully",
   "url": "https://example.com",
   "timestamp": "2024-01-01T12:00:00.000000"
 }
 ```
 
-**Errore (400):**
+**Error (400):**
 ```json
 {
-  "detail": "URL non valida fornita"
+  "detail": "Invalid URL provided"
 }
 ```
 
 ### GET /
-Endpoint di benvenuto.
+Welcome endpoint.
 
 ### GET /health
-Controllo dello stato dell'API.
+API health check.
 
-## Esempi di Utilizzo
+## Usage Examples
 
-### Con curl:
+### With curl:
 ```bash
-# Testare l'endpoint principale
+# Test the main endpoint
 curl http://localhost:8000/
 
-# Loggare una URL valida
+# Log a valid URL
 curl -X POST "http://localhost:8000/log-url" \
      -H "Content-Type: application/json" \
      -d '{"url": "https://www.google.com"}'
@@ -77,11 +77,11 @@ curl -X POST "http://localhost:8000/log-url" \
 curl http://localhost:8000/health
 ```
 
-### Con Python requests:
+### With Python requests:
 ```python
 import requests
 
-# Loggare una URL
+# Log a URL
 response = requests.post(
     "http://localhost:8000/log-url",
     json={"url": "https://www.example.com"}
@@ -89,50 +89,50 @@ response = requests.post(
 print(response.json())
 ```
 
-## Documentazione Interattiva
+## Interactive Documentation
 
-Una volta avviata l'API, puoi accedere alla documentazione interattiva:
+Once the API is running, you can access the interactive documentation:
 
 - **Swagger UI**: `http://localhost:8000/docs`
 - **ReDoc**: `http://localhost:8000/redoc`
 
 ## Logging
 
-Le URL vengono loggate in:
-- **File**: `url_logs.log` (nella directory del progetto)
-- **Console**: Output standard
+URLs are logged to:
+- **File**: `url_logs.log` (in the project directory)
+- **Console**: Standard output
 
-Il formato del log include timestamp, livello e messaggio.
+The log format includes timestamp, level, and message.
 
-## Validazione URL
+## URL Validation
 
-L'API accetta solo URL valide secondo gli standard HTTP/HTTPS. Esempi di URL valide:
+The API only accepts valid URLs according to HTTP/HTTPS standards. Examples of valid URLs:
 - `https://www.example.com`
 - `http://example.com/path?query=value`
 - `https://subdomain.example.org:8080/path`
 
-URL non valide risulteranno in un errore 400.
+Invalid URLs will result in a 400 error.
 
-## Struttura del Progetto
+## Project Structure
 
 ```
 .
-├── main.py              # File principale dell'API
-├── requirements.txt     # Dipendenze Python
-├── README.md           # Documentazione
-└── url_logs.log        # File di log (generato automaticamente)
+├── main.py              # Main API file
+├── requirements.txt     # Python dependencies
+├── README.md           # Documentation
+└── url_logs.log        # Log file (automatically generated)
 ```
 
-## Requisiti
+## Requirements
 
 - Python 3.7+
 - FastAPI
 - Uvicorn
 - Pydantic
 
-## Sviluppo
+## Development
 
-Per avviare in modalità di sviluppo con reload automatico:
+To start in development mode with automatic reload:
 
 ```bash
 uvicorn main:app --reload
