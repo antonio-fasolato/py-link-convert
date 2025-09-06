@@ -3,6 +3,7 @@ from pydantic import ValidationError
 import logging
 from datetime import datetime
 import uvicorn
+import os
 from models import URLRequest, URLResponse
 from services import EpubService
 
@@ -26,7 +27,11 @@ app = FastAPI(
 )
 
 # Inizializzazione del servizio EPUB
-epub_service = EpubService()
+output_dir = os.getenv('OUTPUT_DIRECTORY')
+if output_dir:
+    epub_service = EpubService(output_directory=output_dir)
+else:
+    epub_service = EpubService()
 
 @app.post("/convert-url-to-file", response_model=URLResponse)
 async def convert_url_to_file(request: URLRequest):

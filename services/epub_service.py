@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 class EpubService:
     """Service class for converting URLs to EPUB format"""
     
-    def __init__(self, output_directory: str = "/Users/antonio.fasolato/tmp"):
+    def __init__(self, output_directory: str = "."):
         """
         Initialize the EpubService
         
