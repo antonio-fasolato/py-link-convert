@@ -5,3 +5,4 @@
 - Estrai le classi URLRequest e URLResponse in due file separati
 - Traduci in inglese la documentazione del metodo log_url
 - Aggiungi una classe di service, chiamata EpubService con il metodo pubblico url_to_epub
+- Modifica l'endpoint convert-url-to-file per accettare una lista di url. La validazione va fatta su tutte le url della lista. L'endpoint deve continuare solo se tutte le url sono valide. Il servizio epub_service va modificato per accettare una lista di url e generare il file epub aggiungendo un capitolo per ogni url.

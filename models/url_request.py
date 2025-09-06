@@ -1,5 +1,13 @@
-from pydantic import BaseModel, HttpUrl
+from pydantic import BaseModel, HttpUrl, field_validator
+from typing import List
 
 
 class URLRequest(BaseModel):
-    url: HttpUrl
+    urls: List[HttpUrl]
+    
+    @field_validator('urls')
+    @classmethod
+    def validate_urls_not_empty(cls, v):
+        if not v:
+            raise ValueError('Almeno una URL deve essere fornita')
+        return v

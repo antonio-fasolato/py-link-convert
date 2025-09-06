@@ -31,46 +31,47 @@ epub_service = EpubService()
 @app.post("/convert-url-to-file", response_model=URLResponse)
 async def convert_url_to_file(request: URLRequest):
     """
-    Endpoint to receive a valid URL and save it to Epub format in the configured path.
+    Endpoint to receive a list of valid URLs and save them to Epub format in the configured path.
     
     Args:
-        request: Object containing the URL to validate and log
+        request: Object containing the list of URLs to validate and process
         
     Returns:
         URLResponse: Operation confirmation with details
         
     Raises:
-        HTTPException: If the URL is not valid
+        HTTPException: If any URL is not valid or if there's an error during processing
     """
     try:
-        # L'URL è già validata da Pydantic tramite HttpUrl
-        url_str = str(request.url)
+        # Le URL sono già validate da Pydantic tramite HttpUrl
+        url_strings = [str(url) for url in request.urls]
         timestamp = datetime.now().isoformat()
         
-        # Log dell'URL
-        logger.info(f"URL ricevuta e validata: {url_str}")
+        # Log delle URL
+        logger.info(f"URLs ricevute e validate: {url_strings}")
 
-        # Convert URL to EPUB using the service
-        filename = "Web Article"
-        epub_path = epub_service.url_to_epub(url_str, filename)
+        # Convert URLs to EPUB using the service
+        filename = "Web Articles Collection"
+        epub_path = epub_service.urls_to_epub(url_strings, filename)
 
         return URLResponse(
-            message="URL converted to EPUB successfully",
-            url=url_str,
+            message=f"URLs converted to EPUB successfully ({len(url_strings)} chapters created)",
+            urls=url_strings,
             timestamp=timestamp,
-            filename=filename
+            filename=filename,
+            chapters_count=len(url_strings)
         )
         
     except ValidationError as e:
-        logger.error(f"URL non valida ricevuta: {e}")
+        logger.error(f"URL non valide ricevute: {e}")
         raise HTTPException(
-            status_code=400, 
-            detail="URL non valida fornita",
+            status_code=400,
+            detail="Una o più URL non sono valide",
         )
     except Exception as e:
-        logger.error(f"Errore durante il logging dell'URL: {e}")
+        logger.error(f"Errore durante la conversione delle URL: {e}")
         raise HTTPException(
-            status_code=500, 
+            status_code=500,
             detail="Errore interno del server"
         )
 
