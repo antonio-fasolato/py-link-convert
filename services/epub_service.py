@@ -1,6 +1,7 @@
 import xml2epub
 import logging
 from typing import Optional, List
+import os.path
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +18,7 @@ class EpubService:
         """
         self.output_directory = output_directory
     
-    def urls_to_epub(self, urls: List[str], book_title: Optional[str] = None) -> str:
+    def urls_to_epub(self, urls: List[str], title: str, filename: str) -> str:
         """
         Convert a list of URLs to a single EPUB file with multiple chapters
         
@@ -35,9 +36,6 @@ class EpubService:
             # Check if the list is empty
             if not urls:
                 raise ValueError("La lista di URL non può essere vuota")
-            
-            # Use provided title or default
-            title = book_title or "Web Articles Collection"
             
             # Create an empty eBook with table of contents at the beginning
             book = xml2epub.Epub(title, toc_location="beginning")
@@ -60,7 +58,7 @@ class EpubService:
                 raise ValueError("Nessun capitolo è stato creato con successo dalle URL fornite")
             
             # Create the EPUB file
-            epub_path = book.create_epub(self.output_directory)
+            epub_path = book.create_epub(self.output_directory, absolute_location=os.path.join(self.output_directory, filename))
             
             logger.info(f"Successfully created EPUB from {chapters_created} URLs -> {epub_path}")
             return epub_path

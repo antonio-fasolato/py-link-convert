@@ -63,7 +63,7 @@ async def convert_url_to_file(request: URLRequest):
         title = html_service.get_page_title(url_strings[0])
         filename = f'{uuid.uuid4()}-{title}' if title else uuid.uuid4()
         filename = sanitize_filename(filename)
-        epub_path = epub_service.urls_to_epub(url_strings, filename)
+        epub_path = epub_service.urls_to_epub(url_strings, title, filename)
 
         return URLResponse(
             message=f"URLs converted to EPUB successfully ({len(url_strings)} chapters created)",
