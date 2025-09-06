@@ -25,10 +25,10 @@ app = FastAPI(
     version="1.0.0"
 )
 
-@app.post("/log-url", response_model=URLResponse)
-async def log_url(request: URLRequest):
+@app.post("/convert-url-to-file", response_model=URLResponse)
+async def convert_url_to_file(request: URLRequest):
     """
-    Endpoint to receive and log a valid URL
+    Endpoint to receive a valid URL and save it to Epub format in the configured path.
     
     Args:
         request: Object containing the URL to validate and log
@@ -48,7 +48,8 @@ async def log_url(request: URLRequest):
         logger.info(f"URL ricevuta e validata: {url_str}")
 
         ## create an empty eBook, with toc located at the beginning
-        book = xml2epub.Epub("My New E-book Name", toc_location="beginning")
+        filename = "My New E-book Name"
+        book = xml2epub.Epub(filename, toc_location="beginning")
         chapter1 = xml2epub.create_chapter_from_url(url_str)
         book.add_chapter(chapter1)
         book.create_epub("/Users/antonio.fasolato/tmp")
@@ -56,14 +57,15 @@ async def log_url(request: URLRequest):
         return URLResponse(
             message="URL loggata con successo",
             url=url_str,
-            timestamp=timestamp
+            timestamp=timestamp,
+            filename=filename
         )
         
     except ValidationError as e:
         logger.error(f"URL non valida ricevuta: {e}")
         raise HTTPException(
             status_code=400, 
-            detail="URL non valida fornita"
+            detail="URL non valida fornita",
         )
     except Exception as e:
         logger.error(f"Errore durante il logging dell'URL: {e}")

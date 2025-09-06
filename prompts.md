@@ -2,3 +2,5 @@
   - Avrebbe dovuto anche aggiungere di creare un .venv
   - Avrebbe dovuto anche fare un git init e un .gitignore
 - Traduci il file readme in inglese
+- Estrai le classi URLRequest e URLResponse in due file separati
+- Traduci in inglese la documentazione del metodo log_url
