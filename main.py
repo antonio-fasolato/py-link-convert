@@ -3,6 +3,7 @@ from pydantic import BaseModel, HttpUrl, ValidationError
 import logging
 from datetime import datetime
 import uvicorn
+import xml2epub
 
 # Configurazione del logging
 logging.basicConfig(
@@ -58,7 +59,13 @@ async def log_url(request: URLRequest):
         
         # Log dell'URL
         logger.info(f"URL ricevuta e validata: {url_str}")
-        
+
+        ## create an empty eBook, with toc located at the beginning
+        book = xml2epub.Epub("My New E-book Name", toc_location="beginning")
+        chapter1 = xml2epub.create_chapter_from_url(url_str)
+        book.add_chapter(chapter1)
+        book.create_epub("/Users/antonio.fasolato/tmp")
+
         return URLResponse(
             message="URL loggata con successo",
             url=url_str,

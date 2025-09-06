@@ -1,0 +1,4 @@
+- Crea un progetto api rest python con un controller che prenda in input una url valida e la scriva come log.
+  - Avrebbe dovuto anche aggiungere di creare un .venv
+  - Avrebbe dovuto anche fare un git init e un .gitignore
+- Traduci il file readme in inglese
