@@ -1,16 +1,17 @@
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, HttpUrl, ValidationError
+from pydantic import ValidationError
 import logging
 from datetime import datetime
 import uvicorn
 import xml2epub
+from models import URLRequest, URLResponse
 
 # Configurazione del logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('url_logs.log'),
+        # logging.FileHandler('url_logs.log'),
         logging.StreamHandler()
     ]
 )
@@ -19,19 +20,10 @@ logger = logging.getLogger(__name__)
 
 # Inizializzazione FastAPI
 app = FastAPI(
-    title="URL Logger API",
-    description="API REST per validare e loggare URL",
+    title="URL to Epub converter",
+    description="REST API to convert a url to an Epub document",
     version="1.0.0"
 )
-
-# Modello Pydantic per validare l'input
-class URLRequest(BaseModel):
-    url: HttpUrl
-
-class URLResponse(BaseModel):
-    message: str
-    url: str
-    timestamp: str
 
 @app.get("/")
 async def root():
