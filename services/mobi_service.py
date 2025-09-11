@@ -1,5 +1,6 @@
 import logging
 import subprocess
+import os
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +31,7 @@ class MobiService:
             Exception: If there's an error during the conversion process
         """
         output_file = filename.replace(".epub", ".mobi")
-        command = ["/Applications/calibre.app/Contents/MacOS/ebook-convert", filename, output_file]
+        command = [os.getenv('CALIBRE_CONVERT_PATH', 'ebook-convert'), filename, output_file]
         logger.info(f'Running {" ".join(command)}')
         try:
             subprocess.call(command)

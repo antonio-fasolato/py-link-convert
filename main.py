@@ -28,9 +28,9 @@ app = FastAPI(
 )
 
 # Inizializzazione del servizio EPUB
-output_dir = os.getenv('OUTPUT_DIRECTORY')
-if output_dir:
-    epub_service = EpubService(output_directory=output_dir)
+epub_output_dir = os.getenv('EPUB_OUTPUT_DIRECTORY')
+if epub_output_dir:
+    epub_service = EpubService(output_directory=epub_output_dir)
 else:
     epub_service = EpubService()
 
@@ -40,7 +40,11 @@ html_service = HtmlService()
 # SQLite service initialization
 sqlite_service = SqliteService()
 
-mobi_service = MobiService()
+mobi_output_dir = os.getenv('MOBI_OUTPUT_DIRECTORY')
+if mobi_output_dir:
+    mobi_service = MobiService(output_directory=mobi_output_dir)
+else:
+    mobi_service = MobiService()
 
 @app.post("/convert-url-to-file", response_model=URLResponse)
 async def convert_url_to_file(request: URLRequest):
