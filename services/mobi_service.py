@@ -17,7 +17,8 @@ class MobiService:
         """
         self.output_directory=output_directory
 
-    def epub_to_moby(self, filename: str):
+    @staticmethod
+    def epub_to_moby(filename: str):
         """
         Convert an EPUB file to a MOBI one
 
