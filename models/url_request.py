@@ -1,9 +1,10 @@
 from pydantic import BaseModel, HttpUrl, field_validator
-from typing import List
+from typing import List, Optional
 
 
 class URLRequest(BaseModel):
     urls: List[HttpUrl]
+    mobi: Optional[bool] = False
     
     @field_validator('urls')
     @classmethod

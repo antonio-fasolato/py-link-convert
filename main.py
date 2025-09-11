@@ -5,7 +5,7 @@ from datetime import datetime
 import uvicorn
 import os
 from models import URLRequest, URLResponse
-from services import EpubService, HtmlService, SqliteService
+from services import EpubService, HtmlService, SqliteService, MobiService
 import uuid
 from pathvalidate import sanitize_filename
 
@@ -39,6 +39,8 @@ html_service = HtmlService()
 
 # SQLite service initialization
 sqlite_service = SqliteService()
+
+mobi_service = MobiService()
 
 @app.post("/convert-url-to-file", response_model=URLResponse)
 async def convert_url_to_file(request: URLRequest):
@@ -75,6 +77,8 @@ async def convert_url_to_file(request: URLRequest):
                 logger.warning(f"Errore durante il logging dell'URL {url}: {e}")
         
         epub_path = epub_service.urls_to_epub(url_strings, title, filename)
+        if request.mobi:
+            mobi_path = mobi_service.epub_to_moby(epub_path)
 
         return URLResponse(
             message=f"URLs converted to EPUB successfully ({len(url_strings)} chapters created)",
