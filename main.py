@@ -4,7 +4,7 @@ import uvicorn
 import os
 
 from routes import health, convert
-from auth import handle_api_key
+from security.auth import handle_api_key
 
 # Configurazione del logging
 logging.basicConfig(

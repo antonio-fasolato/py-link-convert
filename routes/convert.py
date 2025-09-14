@@ -7,7 +7,7 @@ from models import URLRequest, URLResponse
 from services import EpubService, HtmlService, SqliteService, MobiService
 import uuid
 from pathvalidate import sanitize_filename
-from auth import handle_api_key
+from security.auth import handle_api_key
 
 router = APIRouter()
 
