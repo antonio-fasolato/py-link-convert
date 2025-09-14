@@ -1,8 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 import logging
 import uvicorn
 import os
+
 from routes import health, convert
+from auth import get_user
 
 # Configurazione del logging
 logging.basicConfig(
@@ -22,7 +24,10 @@ app = FastAPI(
     version="1.0.0"
 )
 app.include_router(health.router)
-app.include_router(convert.router)
+app.include_router(
+    convert.router,
+    dependencies=[Depends(get_user)]
+)
 
 if __name__ == "__main__":
     # Ottenimento parametri host e port dalle variabili d'ambiente
