@@ -3,6 +3,9 @@ import logging
 import os
 from datetime import datetime
 from typing import Optional
+from models import ApiKey
+import secrets
+import string
 
 logger = logging.getLogger(__name__)
 
@@ -42,7 +45,16 @@ class SqliteService:
                         url TEXT NOT NULL
                     )
                 ''')
-                
+
+                cursor.execute('''
+                    CREATE TABLE IF NOT EXISTS "api-keys" (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        timestamp TEXT NOT NULL,
+                        key TEXT NOT NULL,
+                        username TEXT NOT NULL
+                    )
+                ''')
+
                 conn.commit()
                 logger.info("Database initialized successfully")
                 
@@ -106,4 +118,63 @@ class SqliteService:
                 
         except sqlite3.Error as e:
             logger.error(f"Error getting database info: {e}")
+            raise
+
+    def find_api_key_by_username(self, username: str):
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    select *
+                    from "api-keys"
+                    where 1 = 1
+                        and username = ?
+                ''', [username])
+                res = cursor.fetchone()
+                key = ApiKey(*res) if res else None
+                return key
+        except sqlite3.Error as e:
+            logger.error(f"Error generating new api key: {e}")
+            raise
+
+    def find_api_key_by_key(self, key: str):
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    select *
+                    from "api-keys"
+                    where 1 = 1
+                        and key = ?
+                ''', [key])
+                res = cursor.fetchone()
+                key = ApiKey(*res) if res else None
+                return key
+        except sqlite3.Error as e:
+            logger.error(f"Error generating new api key: {e}")
+            raise
+
+    def create_new_api_key(self, username: str):
+        old_key = self.find_api_key_by_username(username)
+        if old_key:
+            raise Exception(f'username {username} already exists')
+        alphabet = string.ascii_letters + string.digits
+        secret = "".join(secrets.choice(alphabet) for  _ in range(32))
+        new_key = ApiKey(id=None, timestamp=datetime.now(), key=secret, username=username)
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    insert into "api-keys" (
+                        timestamp,
+                        key,
+                        username
+                    ) values (?, ?, ?)
+                ''', (new_key.timestamp, new_key.key, new_key.username))
+
+                conn.commit()
+
+                return new_key
+        except sqlite3.Error as e:
+            logger.error(f"Error generating new api key: {e}")
             raise
