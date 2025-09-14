@@ -1,4 +1,4 @@
-from fastapi import HTTPException, APIRouter
+from fastapi import HTTPException, APIRouter, Depends
 from pydantic import ValidationError
 import logging
 from datetime import datetime
@@ -7,6 +7,7 @@ from models import URLRequest, URLResponse
 from services import EpubService, HtmlService, SqliteService, MobiService
 import uuid
 from pathvalidate import sanitize_filename
+from auth import handle_api_key
 
 router = APIRouter()
 
@@ -32,12 +33,13 @@ else:
     mobi_service = MobiService()
 
 @router.post("/convert-url-to-file", response_model=URLResponse)
-async def convert_url_to_file(request: URLRequest):
+async def convert_url_to_file(request: URLRequest, user: dict = Depends(handle_api_key)):
     """
     Endpoint to receive a list of valid URLs and save them to Epub format in the configured path.
 
     Args:
         request: Object containing the list of URLs to validate and process
+        user: Authenticated user
 
     Returns:
         URLResponse: Operation confirmation with details

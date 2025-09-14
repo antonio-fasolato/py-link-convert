@@ -4,7 +4,7 @@ import uvicorn
 import os
 
 from routes import health, convert
-from auth import get_user
+from auth import handle_api_key
 
 # Configurazione del logging
 logging.basicConfig(
@@ -26,7 +26,7 @@ app = FastAPI(
 app.include_router(health.router)
 app.include_router(
     convert.router,
-    dependencies=[Depends(get_user)]
+    dependencies=[Depends(handle_api_key)]
 )
 
 if __name__ == "__main__":

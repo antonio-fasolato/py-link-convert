@@ -1,14 +1,22 @@
 from fastapi import Security, HTTPException, status, Request
 from fastapi.security import APIKeyHeader
-from db import check_api_key, get_user_from_api_key
 
-header_name = APIKeyHeader(name="X-API-Key")
+api_key = APIKeyHeader(name="x-api-key")
 
-def get_user(api_key_header: str = Security(header_name)):
-    if check_api_key(api_key_header):
-        user = get_user_from_api_key(api_key_header)
-        return user
-    raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Missing or invalid API key"
-    )
+def handle_api_key(req: Request, key: str = Security(api_key)):
+    if key != "tony":
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Missing or invalid API key"
+        )
+
+        # # Check if the user is trying to access an internal route
+        # for path in internal_routes:
+        #     if path in req.url.path and not api_key_data.is_internal:
+        #         raise HTTPException(
+        #             status_code=status.HTTP_403_FORBIDDEN,
+        #             detail="You do not have permission to access this route"
+        #         )
+    yield {
+        "name": "tony"
+    }
