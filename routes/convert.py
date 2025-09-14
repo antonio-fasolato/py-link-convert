@@ -4,6 +4,7 @@ import logging
 from datetime import datetime
 import os
 from models import URLRequest, URLResponse
+from security.Tenant import Tenant
 from services import EpubService, HtmlService, SqliteService, MobiService
 import uuid
 from pathvalidate import sanitize_filename
@@ -33,13 +34,13 @@ else:
     mobi_service = MobiService()
 
 @router.post("/convert-url-to-file", response_model=URLResponse)
-async def convert_url_to_file(request: URLRequest, user: dict = Depends(handle_api_key)):
+async def convert_url_to_file(request: URLRequest, tenant: Tenant = Depends(handle_api_key)):
     """
     Endpoint to receive a list of valid URLs and save them to Epub format in the configured path.
 
     Args:
         request: Object containing the list of URLs to validate and process
-        user: Authenticated user
+        tenant: Authenticated user
 
     Returns:
         URLResponse: Operation confirmation with details
@@ -47,6 +48,8 @@ async def convert_url_to_file(request: URLRequest, user: dict = Depends(handle_a
     Raises:
         HTTPException: If any URL is not valid or if there's an error during processing
     """
+    logger.info(f"Starting conversion for user {tenant}")
+
     try:
         # Le URL sono già validate da Pydantic tramite HttpUrl
         url_strings = [str(url) for url in request.urls]

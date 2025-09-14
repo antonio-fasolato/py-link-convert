@@ -1,6 +1,8 @@
 from fastapi import Security, HTTPException, status, Request
 from fastapi.security import APIKeyHeader
 
+from security.Tenant import Tenant
+
 api_key = APIKeyHeader(name="x-api-key")
 
 def handle_api_key(req: Request, key: str = Security(api_key)):
@@ -17,6 +19,4 @@ def handle_api_key(req: Request, key: str = Security(api_key)):
         #             status_code=status.HTTP_403_FORBIDDEN,
         #             detail="You do not have permission to access this route"
         #         )
-    yield {
-        "name": "tony"
-    }
+    yield Tenant(username= "tony")
