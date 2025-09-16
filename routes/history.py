@@ -1,6 +1,5 @@
 from fastapi import HTTPException, APIRouter, Depends
 import logging
-from models import URLResponse
 from models.history_response import HistoryResponse
 from security.Tenant import Tenant
 from services import SqliteService
@@ -14,11 +13,26 @@ logger = logging.getLogger(__name__)
 sqlite_service = SqliteService()
 
 @router.get("/history", response_model=HistoryResponse)
-async def history(tenant: Tenant = Depends(handle_api_key)):
+async def history(rows_per_page: int, page: int, tenant: Tenant = Depends(handle_api_key)):
+    """
+        Endpoint to get the past converted urls
+
+    Args:
+        rows_per_page: pagination: rows per page returned
+        page: pagination: 0-based page returned
+        tenant: Authenticated user
+
+    Returns:
+        HistoryResponse: List of previous urls
+
+    Raises:
+        HTTPException: If any URL is not valid or if there's an error during processing
+    """
     try:
-        logs = sqlite_service.get_history(tenant.username)
+        count = sqlite_service.count_history(tenant.username)
+        logs = sqlite_service.get_history(tenant.username, rows_per_page, page)
         return HistoryResponse(
-            message=f'{len(logs)} rows of ??',
+            message=f'{len(logs)} rows of {count}',
             history=logs
         )
     except Exception as e:

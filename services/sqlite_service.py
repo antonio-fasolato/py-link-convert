@@ -180,7 +180,23 @@ class SqliteService:
             logger.error(f"Error generating new api key: {e}")
             raise
 
-    def get_history(self, username: str) -> List[LogUrl]:
+    def count_history(self, username: str) -> int:
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    select count(*)
+                    from "log-urls"
+                    where 1 = 1
+                        and username = ?
+                ''', [username])
+                res = cursor.fetchone()
+                return res[0] if res else 0
+        except sqlite3.Error as e:
+            logger.error(f"Error retrieving history: {e}")
+            raise
+
+    def get_history(self, username: str, rows_per_page = 10, page = 0) -> List[LogUrl]:
         try:
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.cursor()
@@ -190,7 +206,9 @@ class SqliteService:
                     where 1 = 1
                         and username = ?
                     order by timestamp desc
-                ''', [username])
+                    limit ?
+                    offset ?
+                ''', (username, rows_per_page, rows_per_page * page))
                 return [LogUrl(*row) for row in cursor.fetchall()]
         except sqlite3.Error as e:
             logger.error(f"Error retrieving history: {e}")
