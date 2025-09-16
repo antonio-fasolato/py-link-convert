@@ -18,12 +18,12 @@ class MobiService:
         self.output_directory=output_directory
 
     @staticmethod
-    def epub_to_moby(filename: str):
+    def epub_to_moby(input_filename: str, output_filename: str):
         """
         Convert an EPUB file to a MOBI one
 
         Args:
-            filename: The EPUB file
+            input_filename: The EPUB file
 
         Returns:
             str: Path to the created MOBY file
@@ -31,12 +31,11 @@ class MobiService:
         Raises:
             Exception: If there's an error during the conversion process
         """
-        output_file = filename.replace(".epub", ".mobi")
-        command = [os.getenv('CALIBRE_CONVERT_PATH', 'ebook-convert'), filename, output_file]
+        command = [os.getenv('CALIBRE_CONVERT_PATH', 'ebook-convert'), input_filename, output_filename]
         logger.info(f'Running {" ".join(command)}')
         try:
             subprocess.call(command)
         except Exception as e:
             logger.error(f"Error converting URLs to MOBI: {str(e)}")
             raise
-        return output_file
+        return output_filename
