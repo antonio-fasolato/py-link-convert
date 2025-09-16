@@ -4,9 +4,9 @@ import uvicorn
 import os
 import argparse
 
-from routes import health, convert
+from routes import health, convert, history
 from security.auth import handle_api_key
-from services import sqlite_service, SqliteService
+from services import SqliteService
 
 # Configurazione del logging
 logging.basicConfig(
@@ -28,6 +28,10 @@ app = FastAPI(
 app.include_router(health.router)
 app.include_router(
     convert.router,
+    dependencies=[Depends(handle_api_key)]
+)
+app.include_router(
+    history.router,
     dependencies=[Depends(handle_api_key)]
 )
 

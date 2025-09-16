@@ -4,6 +4,7 @@ import logging
 from datetime import datetime
 import os
 from models import URLRequest, URLResponse
+from models.log_url import LogUrl
 from security.Tenant import Tenant
 from services import EpubService, HtmlService, SqliteService, MobiService
 import uuid
@@ -67,9 +68,10 @@ async def url_to_epub(request: URLRequest, tenant: Tenant = Depends(handle_api_k
         # Log each URL to the database
         for url in url_strings:
             try:
-                sqlite_service.log_url_conversion(filename, url, timestamp)
+                sqlite_service.log_url_conversion(LogUrl(None, tenant.username, timestamp, filename, url))
             except Exception as e:
                 logger.warning(f"Errore durante il logging dell'URL {url}: {e}")
+                raise
 
         epub_path = epub_service.urls_to_epub(url_strings, title, filename)
         logger.info(f'File {epub_path} written.')
@@ -129,9 +131,10 @@ async def url_to_mobi(request: URLRequest, tenant: Tenant = Depends(handle_api_k
         # Log each URL to the database
         for url in url_strings:
             try:
-                sqlite_service.log_url_conversion(filename, url, timestamp)
+                sqlite_service.log_url_conversion(LogUrl(None, tenant.username, timestamp, filename, url))
             except Exception as e:
                 logger.warning(f"Errore durante il logging dell'URL {url}: {e}")
+                raise
 
         epub_path = epub_service.urls_to_epub(url_strings, title, tmp_filename.name)
         logger.info(f'File {epub_path} written')

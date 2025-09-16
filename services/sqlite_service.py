@@ -6,6 +6,10 @@ from typing import Optional
 from models import ApiKey
 import secrets
 import string
+from typing import List
+
+
+from models.log_url import LogUrl
 
 logger = logging.getLogger(__name__)
 
@@ -40,6 +44,7 @@ class SqliteService:
                 cursor.execute('''
                     CREATE TABLE IF NOT EXISTS "log-urls" (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        username TEXT NOT NULL,
                         timestamp TEXT NOT NULL,
                         title TEXT NOT NULL,
                         url TEXT NOT NULL
@@ -62,29 +67,25 @@ class SqliteService:
             logger.error(f"Error initializing database: {e}")
             raise
     
-    def log_url_conversion(self, title: str, url: str, timestamp: Optional[str] = None):
+    def log_url_conversion(self, item: LogUrl):
         """
         Log a URL conversion to the database
         
         Args:
-            title: The filename/title of the generated file
-            url: The URL that was converted
-            timestamp: Optional timestamp. If not provided, uses current time
+            item: the url to log
         """
-        if timestamp is None:
-            timestamp = datetime.now().isoformat()
-            
+
         try:
             with sqlite3.connect(self.db_path) as conn:
                 cursor = conn.cursor()
                 
                 cursor.execute('''
-                    INSERT INTO "log-urls" (timestamp, title, url)
-                    VALUES (?, ?, ?)
-                ''', (timestamp, title, url))
+                    INSERT INTO "log-urls" (username, timestamp, title, url)
+                    VALUES (?, ?, ?, ?)
+                ''', (item.username, item.timestamp, item.title, item.url))
                 
                 conn.commit()
-                logger.debug(f"Logged URL conversion: {url} -> {title} at {timestamp}")
+                logger.debug(f"Logged URL conversion: {item}")
                 
         except sqlite3.Error as e:
             logger.error(f"Error logging URL conversion: {e}")
@@ -177,4 +178,20 @@ class SqliteService:
                 return new_key
         except sqlite3.Error as e:
             logger.error(f"Error generating new api key: {e}")
+            raise
+
+    def get_history(self, username: str) -> List[LogUrl]:
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    select *
+                    from "log-urls"
+                    where 1 = 1
+                        and username = ?
+                    order by timestamp desc
+                ''', [username])
+                return [LogUrl(*row) for row in cursor.fetchall()]
+        except sqlite3.Error as e:
+            logger.error(f"Error retrieving history: {e}")
             raise
