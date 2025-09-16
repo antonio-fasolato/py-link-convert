@@ -24,7 +24,8 @@ class EpubService:
         
         Args:
             urls: List of URLs to convert to EPUB chapters
-            book_title: Optional title for the book. If not provided, uses a default title
+            title: Optional title for the book. If not provided, uses a default title
+            filename: the epub file name
             
         Returns:
             str: Path to the created EPUB file

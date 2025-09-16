@@ -24,6 +24,7 @@ class MobiService:
 
         Args:
             input_filename: The EPUB file
+            output_filename: The mobi file name to create
 
         Returns:
             str: Path to the created MOBY file
