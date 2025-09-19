@@ -37,12 +37,25 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Inizializzazione FastAPI
-app = FastAPI(
-    title="URL to Epub converter",
-    description="REST API to convert a url to an Epub document",
-    version="1.0.0"
-)
+# FastAPI init
+title = "URL to Epub converter"
+description = "REST API to convert a url to an Epub document"
+version = "1.0.0"
+if args.debug:
+    app = FastAPI(
+        title= title,
+        description=description,
+        version=version
+    )
+else:
+    app = FastAPI(
+        title=title,
+        description=description,
+        version=version,
+        docs_url=None,
+        redoc_url=None,
+        openapi_url=None
+    )
 app.include_router(health.router)
 app.include_router(
     convert.router,
