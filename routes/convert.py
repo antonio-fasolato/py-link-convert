@@ -14,7 +14,7 @@ router = APIRouter()
 
 logger = logging.getLogger(__name__)
 
-# Inizializzazione del servizio EPUB
+# Epub service initialization
 epub_output_dir = os.getenv('EPUB_OUTPUT_DIRECTORY')
 if epub_output_dir:
     epub_service = EpubService(output_directory=epub_output_dir)
@@ -51,19 +51,18 @@ async def url_to_epub(request: URLRequest, tenant: Tenant = Depends(handle_api_k
     logger.info(f"Starting epub conversion for user {tenant}")
 
     try:
-        # Le URL sono già validate da Pydantic tramite HttpUrl
+        # URLs are already validated by Pydantic through HttpUrl
         url_strings = [str(url) for url in request.urls]
         timestamp = datetime.now().isoformat()
 
-        # Log delle URL
-        logger.info(f"URLs ricevute e validate: {url_strings}")
+        logger.info(f"Received and validated URLs: {url_strings}")
 
         # Convert URLs to EPUB using the service
         title = html_service.get_page_title(url_strings[0])
         filename = title if title else uuid.uuid4()
         filename = sanitize_filename(filename)
 
-        # Log each URL to the database
+        # Save history
         for url in url_strings:
             try:
                 sqlite_service.log_url_conversion(LogUrl(None, tenant.username, timestamp, filename, url))
@@ -83,16 +82,16 @@ async def url_to_epub(request: URLRequest, tenant: Tenant = Depends(handle_api_k
         )
 
     except ValidationError as e:
-        logger.error(f"URL non valide ricevute: {e}")
+        logger.error(f"Invalid urls received: {e}")
         raise HTTPException(
             status_code=400,
-            detail="Una o più URL non sono valide",
+            detail="One or more invalid urls",
         )
     except Exception as e:
-        logger.error(f"Errore durante la conversione delle URL: {e}")
+        logger.error(f"Error converting url: {e}")
         raise HTTPException(
             status_code=500,
-            detail="Errore interno del server"
+            detail="Internal server error"
         )
 
 @router.post("/url-to-mobi", response_model=URLResponse)
@@ -113,12 +112,11 @@ async def url_to_mobi(request: URLRequest, tenant: Tenant = Depends(handle_api_k
     logger.info(f"Starting epub conversion for user {tenant}")
 
     try:
-        # Le URL sono già validate da Pydantic tramite HttpUrl
+        # URLs are already validated by Pydantic through HttpUrl
         url_strings = [str(url) for url in request.urls]
         timestamp = datetime.now().isoformat()
 
-        # Log delle URL
-        logger.info(f"URLs ricevute e validate: {url_strings}")
+        logger.info(f"Received and validated URLs: {url_strings}")
 
         # Convert URLs to EPUB using the service
         title = html_service.get_page_title(url_strings[0])
@@ -131,7 +129,7 @@ async def url_to_mobi(request: URLRequest, tenant: Tenant = Depends(handle_api_k
             try:
                 sqlite_service.log_url_conversion(LogUrl(None, tenant.username, timestamp, filename, url))
             except Exception as e:
-                logger.warning(f"Errore durante il logging dell'URL {url}: {e}")
+                logger.warning(f"Error logging URL {url}: {e}")
                 raise
 
         epub_path = epub_service.urls_to_epub(url_strings, title, tmp_filename.name)
@@ -141,7 +139,7 @@ async def url_to_mobi(request: URLRequest, tenant: Tenant = Depends(handle_api_k
         logger.info(f'File {mobi_path} written')
 
         return URLResponse(
-            message=f"URLs converted to EPUB successfully ({len(url_strings)} chapters created)",
+            message=f"URLs converted to MOBI successfully ({len(url_strings)} chapters created)",
             urls=url_strings,
             timestamp=timestamp,
             filename=filename,
@@ -149,14 +147,14 @@ async def url_to_mobi(request: URLRequest, tenant: Tenant = Depends(handle_api_k
         )
 
     except ValidationError as e:
-        logger.error(f"URL non valide ricevute: {e}")
+        logger.error(f"Received invalid urls: {e}")
         raise HTTPException(
             status_code=400,
-            detail="Una o più URL non sono valide",
+            detail="One or more invalid url",
         )
     except Exception as e:
-        logger.error(f"Errore durante la conversione delle URL: {e}")
+        logger.error(f"Error converting an url: {e}")
         raise HTTPException(
             status_code=500,
-            detail="Errore interno del server"
+            detail="Internal server error"
         )

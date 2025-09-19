@@ -36,7 +36,7 @@ class EpubService:
         try:
             # Check if the list is empty
             if not urls:
-                raise ValueError("La lista di URL non può essere vuota")
+                raise ValueError("URL list cannot be empty")
             
             # Create an empty eBook with table of contents at the beginning
             book = xml2epub.Epub(title, toc_location="beginning")
@@ -56,7 +56,7 @@ class EpubService:
             
             # Check if at least one chapter was created
             if chapters_created == 0:
-                raise ValueError("Nessun capitolo è stato creato con successo dalle URL fornite")
+                raise ValueError("No chapter successfully created from given URLs")
             
             # Create the EPUB file
             epub_path = book.create_epub(self.output_directory, absolute_location=os.path.join(self.output_directory, filename))

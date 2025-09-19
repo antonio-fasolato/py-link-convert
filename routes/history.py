@@ -35,8 +35,8 @@ async def history(rows_per_page: int, page: int, tenant: Tenant = Depends(handle
             history=logs
         )
     except Exception as e:
-        logger.error(f"Errore durante la conversione delle URL: {e}")
+        logger.error(f"Errore retrieving history: {e}")
         raise HTTPException(
             status_code=500,
-            detail="Errore interno del server"
+            detail="Internal server error"
         )

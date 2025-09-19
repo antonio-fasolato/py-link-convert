@@ -9,5 +9,5 @@ class URLRequest(BaseModel):
     @classmethod
     def validate_urls_not_empty(cls, v):
         if not v:
-            raise ValueError('Almeno una URL deve essere fornita')
+            raise ValueError('At least one url is needed')
         return v

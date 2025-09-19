@@ -5,5 +5,5 @@ router = APIRouter()
 
 @router.get("/health")
 async def health_check():
-    """Endpoint per il controllo dello stato dell'API"""
+    """Endpoint to check API statul"""
     return {"status": "OK", "timestamp": datetime.now().isoformat()}
