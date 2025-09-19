@@ -1,7 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Api" type="UvRunConfigurationType" factoryName="UvRunConfigurationType">
     <option name="args">
-      <list />
+      <list>
+        <option value="-d" />
+      </list>
     </option>
     <option name="checkSync" value="true" />
     <option name="env">

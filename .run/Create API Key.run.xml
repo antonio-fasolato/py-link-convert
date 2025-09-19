@@ -2,6 +2,7 @@
   <configuration default="false" name="Create API Key" type="UvRunConfigurationType" factoryName="UvRunConfigurationType">
     <option name="args">
       <list>
+        <option value="-d" />
         <option value="-k" />
         <option value="tony" />
       </list>
