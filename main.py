@@ -21,7 +21,7 @@ parser.add_argument(
 )
 parser.add_argument(
     '-d',
-    '--debug',
+    '--develop',
     help='Start with development configuration',
     action='store_true'
 )
@@ -29,7 +29,7 @@ args = parser.parse_args()
 
 # Logging configuration
 logging.basicConfig(
-    level=logging.INFO if args.debug else logging.ERROR,
+    level=logging.INFO if args.develop else logging.ERROR,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
         logging.StreamHandler()
@@ -41,7 +41,7 @@ logger = logging.getLogger(__name__)
 title = "URL to Epub converter"
 description = "REST API to convert a url to an Epub document"
 version = "1.0.0"
-if args.debug:
+if args.develop:
     app = FastAPI(
         title= title,
         description=description,
@@ -78,4 +78,4 @@ if __name__ == "__main__":
         host = os.getenv('UVICORN_HOST', '0.0.0.0')
         port = int(os.getenv('UVICORN_PORT', '8000'))
 
-        uvicorn.run("main:app", host=host, port=port, reload=True, log_level='info' if args.debug else 'error')
+        uvicorn.run("main:app", host=host, port=port, reload=True, log_level='info' if args.develop else 'error')
