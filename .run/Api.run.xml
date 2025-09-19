@@ -1,0 +1,23 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Api" type="UvRunConfigurationType" factoryName="UvRunConfigurationType">
+    <option name="args">
+      <list />
+    </option>
+    <option name="checkSync" value="true" />
+    <option name="env">
+      <map>
+        <entry key="CALIBRE_CONVERT_PATH" value="/Applications/calibre.app/Contents/MacOS/ebook-convert" />
+        <entry key="EPUB_OUTPUT_DIRECTORY" value="$USER_HOME$/tmp" />
+        <entry key="MOBI_OUTPUT_DIRECTORY" value="$USER_HOME$/tmp" />
+        <entry key="SQLITE_PATH" value="$USER_HOME$/tmp/PyLinkSender.sqlite" />
+      </map>
+    </option>
+    <option name="runType" value="SCRIPT" />
+    <option name="scriptOrModule" value="$PROJECT_DIR$/main.py" />
+    <option name="uvArgs">
+      <list />
+    </option>
+    <option name="uvSdkKey" value="uv (PyLinkSender)" />
+    <method v="2" />
+  </configuration>
+</component>
