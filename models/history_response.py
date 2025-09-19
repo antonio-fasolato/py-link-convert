@@ -1,7 +1,6 @@
 from typing import List
 from dataclasses import dataclass
-
-from models.log_url import LogUrl
+from .log_url import LogUrl
 
 @dataclass()
 class HistoryResponse:

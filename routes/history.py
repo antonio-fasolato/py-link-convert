@@ -1,9 +1,8 @@
 from fastapi import HTTPException, APIRouter, Depends
 import logging
-from models.history_response import HistoryResponse
-from security.Tenant import Tenant
+from models import HistoryResponse
+from security import Tenant, handle_api_key
 from services import SqliteService
-from security.auth import handle_api_key
 
 router = APIRouter()
 

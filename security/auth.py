@@ -1,7 +1,6 @@
 from fastapi import Security, HTTPException, status, Request
 from fastapi.security import APIKeyHeader
-
-from security.Tenant import Tenant
+from .tenant import Tenant
 from services import SqliteService
 
 api_key_header = APIKeyHeader(name="x-api-key")

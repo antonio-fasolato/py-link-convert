@@ -3,13 +3,10 @@ import logging
 import os
 from datetime import datetime
 from typing import Optional
-from models import ApiKey
+from models import ApiKey, LogUrl
 import secrets
 import string
 from typing import List
-
-
-from models.log_url import LogUrl
 
 logger = logging.getLogger(__name__)
 

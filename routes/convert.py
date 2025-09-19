@@ -3,13 +3,11 @@ from pydantic import ValidationError
 import logging
 from datetime import datetime
 import os
-from models import URLRequest, URLResponse
-from models.log_url import LogUrl
-from security.Tenant import Tenant
+from models import URLRequest, URLResponse, LogUrl
+from security import Tenant, handle_api_key
 from services import EpubService, HtmlService, SqliteService, MobiService
 import uuid
 from pathvalidate import sanitize_filename
-from security.auth import handle_api_key
 import tempfile
 
 router = APIRouter()
