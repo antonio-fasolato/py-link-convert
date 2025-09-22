@@ -11,7 +11,7 @@
         <entry key="CALIBRE_CONVERT_PATH" value="/Applications/calibre.app/Contents/MacOS/ebook-convert" />
         <entry key="EPUB_OUTPUT_DIRECTORY" value="$USER_HOME$/tmp" />
         <entry key="MOBI_OUTPUT_DIRECTORY" value="$USER_HOME$/tmp" />
-        <entry key="SQLITE_PATH" value="$USER_HOME$/tmp/PyLinkSender.sqlite" />
+        <entry key="SQLITE_PATH" value="$USER_HOME$/tmp/py-link-convert.sqlite" />
       </map>
     </option>
     <option name="runType" value="SCRIPT" />
@@ -19,7 +19,7 @@
     <option name="uvArgs">
       <list />
     </option>
-    <option name="uvSdkKey" value="uv (PyLinkSender)" />
+    <option name="uvSdkKey" value="uv (py-link-convert)" />
     <method v="2" />
   </configuration>
 </component>

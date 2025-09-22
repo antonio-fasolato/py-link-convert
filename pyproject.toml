@@ -1,7 +1,7 @@
 [project]
-name = "pylinksender"
+name = "py-link-convert"
 version = "0.1.0"
-description = "Add your description here"
+description = "Python REST API to convert a list of urls to an EPUB or MOBI file."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
