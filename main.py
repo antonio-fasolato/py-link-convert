@@ -12,7 +12,13 @@ from services import SqliteService
 parser = argparse.ArgumentParser(
     prog="py-link-sender",
     description="A script to convert links to Epub and Moby files",
-    epilog="Copyright Antonio Fasolato 2025"
+    epilog='''
+    The behaviour of the application can be controlled with the following environment variables:
+    CALIBRE_CONVERT_PATH - The calibre bin path (on MacOS it should be something like `/Applications/calibre.app/Contents/MacOS/ebook-convert - Default is empty),
+    SQLITE_PATH - The sqlite database location (important for Docker installations - Default is the current directory),
+    EPUB_OUTPUT_DIRECTORY - The directory where the EPUB files will be created. (Default is the current directory),
+    MOBI_OUTPUT_DIRECTORY - The directory where the MOBI files will be created. (Default is the current directory)
+    '''
 )
 parser.add_argument(
     '-k',
@@ -22,7 +28,7 @@ parser.add_argument(
 parser.add_argument(
     '-d',
     '--develop',
-    help='Start with development configuration',
+    help='Start with development configuration (verbose logging, and automatic API documentation)',
     action='store_true'
 )
 args = parser.parse_args()
