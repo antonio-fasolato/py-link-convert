@@ -1,0 +1,11 @@
+- Crea un progetto api rest python con un controller che prenda in input una url valida e la scriva come log.
+  - Avrebbe dovuto anche aggiungere di creare un .venv
+  - Avrebbe dovuto anche fare un git init e un .gitignore
+- Traduci il file readme in inglese
+- Estrai le classi URLRequest e URLResponse in due file separati
+- Traduci in inglese la documentazione del metodo log_url
+- Aggiungi una classe di service, chiamata EpubService con il metodo pubblico url_to_epub
+- Modifica l'endpoint convert-url-to-file per accettare una lista di url. La validazione va fatta su tutte le url della lista. L'endpoint deve continuare solo se tutte le url sono valide. Il servizio epub_service va modificato per accettare una lista di url e generare il file epub aggiungendo un capitolo per ogni url.
+- Nel file main.py, nell'inizializzazione del servizio EpubService passa il parametro output_directory leggendolo dalla variabile d'ambiente OUTPUT_DIRECTORY. Se la variabile non e' definita non passare nulla in modo da usare il default definito nella classe EpubService. Cambia il default della classe EpubService in modo che output_directory sia la cartella corrente.
+- Nel file main.py, prendi i parametri di uvicorn.run host e port da due varibili d'ambiente chiamate UVICOORN_HOST e UVICORN_PORT. Se non sono definite usa i valori attualmente definiti nel file.
+- Aggiungi al servizio la possibilita' di collegarsi ad un database sqlite. Il path del file di database deve essere preso da una variabile di ambiente SQLITE_PATH, se la variabile non e' definita deve essere data.sqlite. Se il database non esiste deve essere creato e inizializzato con una tabella log-urls, con le colonne: timestamp, title e url. Quando viene chiamato l'endpoint convert-url-to-file ogni url elaborata va loggata in questa tabella salvando timestamp corrente, nome del file generato (quindi nel file main.py dopo la riga `filename = sanitize_filename(filename)`) e url. Devi creare un servizio separato nel modulo services che contenga tutto il codice per l'accesso a sqlite.
