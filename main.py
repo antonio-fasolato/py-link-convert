@@ -83,4 +83,4 @@ if __name__ == "__main__":
         host = os.getenv('UVICORN_HOST', '0.0.0.0')
         port = int(os.getenv('UVICORN_PORT', '8000'))
 
-        uvicorn.run("main:app", host=host, port=port, reload=True, log_level='info' if args.develop else 'error')
+        uvicorn.run("main:app", host=host, port=port, reload=command_line_service.args.develop, log_level='info' if command_line_service.args.develop else 'error')
