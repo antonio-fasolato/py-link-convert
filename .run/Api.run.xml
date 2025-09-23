@@ -3,15 +3,17 @@
     <option name="args">
       <list>
         <option value="-d" />
+        <option value="-c" />
+        <option value="/Applications/calibre.app/Contents/MacOS/ebook-convert" />
+        <option value="-s" />
+        <option value="$USER_HOME$/tmp" />
       </list>
     </option>
     <option name="checkSync" value="true" />
     <option name="env">
       <map>
-        <entry key="CALIBRE_CONVERT_PATH" value="/Applications/calibre.app/Contents/MacOS/ebook-convert" />
         <entry key="EPUB_OUTPUT_DIRECTORY" value="$USER_HOME$/tmp" />
         <entry key="MOBI_OUTPUT_DIRECTORY" value="$USER_HOME$/tmp" />
-        <entry key="SQLITE_PATH" value="$USER_HOME$/tmp/py-link-convert.sqlite" />
       </map>
     </option>
     <option name="runType" value="SCRIPT" />

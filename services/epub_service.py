@@ -1,7 +1,8 @@
 import xml2epub
 import logging
-from typing import Optional, List
+from typing import List
 import os.path
+from .command_line_parser_service import args
 
 logger = logging.getLogger(__name__)
 
@@ -9,14 +10,11 @@ logger = logging.getLogger(__name__)
 class EpubService:
     """Service class for converting URLs to EPUB format"""
     
-    def __init__(self, output_directory: str = "."):
+    def __init__(self):
         """
         Initialize the EpubService
-        
-        Args:
-            output_directory: Directory where the EPUB files will be saved
         """
-        self.output_directory = output_directory
+        self.output_directory = args.epub_output_path
     
     def urls_to_epub(self, urls: List[str], title: str, filename: str) -> str:
         """

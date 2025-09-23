@@ -2,36 +2,10 @@ from fastapi import FastAPI, Depends
 import logging
 import uvicorn
 import os
-import argparse
 
 from routes import health, convert, history
 from security import handle_api_key
-from services import SqliteService
-
-# Command line parsing
-parser = argparse.ArgumentParser(
-    prog="py-link-sender",
-    description="A script to convert links to Epub and Moby files",
-    epilog='''
-    The behaviour of the application can be controlled with the following environment variables:
-    CALIBRE_CONVERT_PATH - The calibre bin path (on MacOS it should be something like `/Applications/calibre.app/Contents/MacOS/ebook-convert - Default is empty),
-    SQLITE_PATH - The sqlite database location (important for Docker installations - Default is the current directory),
-    EPUB_OUTPUT_DIRECTORY - The directory where the EPUB files will be created. (Default is the current directory),
-    MOBI_OUTPUT_DIRECTORY - The directory where the MOBI files will be created. (Default is the current directory)
-    '''
-)
-parser.add_argument(
-    '-k',
-    '--create-api-key',
-    help='Create a new api key',
-)
-parser.add_argument(
-    '-d',
-    '--develop',
-    help='Start with development configuration (verbose logging, and automatic API documentation)',
-    action='store_true'
-)
-args = parser.parse_args()
+from services import SqliteService, args
 
 # Logging configuration
 logging.basicConfig(
@@ -83,4 +57,4 @@ if __name__ == "__main__":
         host = os.getenv('UVICORN_HOST', '0.0.0.0')
         port = int(os.getenv('UVICORN_PORT', '8000'))
 
-        uvicorn.run("main:app", host=host, port=port, reload=command_line_service.args.develop, log_level='info' if command_line_service.args.develop else 'error')
+        uvicorn.run("main:app", host=host, port=port, reload=args.develop, log_level='info' if args.develop else 'error')
