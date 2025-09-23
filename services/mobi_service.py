@@ -1,6 +1,7 @@
 import logging
 import subprocess
-import os
+from .command_line_parser_service import args
+from os import path
 
 logger = logging.getLogger(__name__)
 
@@ -8,17 +9,13 @@ logger = logging.getLogger(__name__)
 class MobiService:
     """Service class to convert an epub file to mobi"""
 
-    def __init__(self, output_directory: str = "."):
+    def __init__(self):
         """
         Initialize the MobiService
-
-        Args:
-            output_directory: Directory where the MOBI files will be saved
         """
-        self.output_directory=output_directory
+        self.output_directory=args.mobi_output_path
 
-    @staticmethod
-    def epub_to_moby(input_filename: str, output_filename: str):
+    def epub_to_moby(self, input_filename: str, output_filename: str):
         """
         Convert an EPUB file to a MOBI one
 
@@ -32,7 +29,9 @@ class MobiService:
         Raises:
             Exception: If there's an error during the conversion process
         """
-        command = [os.getenv('CALIBRE_CONVERT_PATH', 'ebook-convert'), input_filename, output_filename]
+        if not args.calibre_path:
+            raise Exception("Calibre converter path not set (use --calibre-path)")
+        command = [args.calibre_path, input_filename, path.join(self.output_directory, output_filename)]
         logger.info(f'Running {" ".join(command)}')
         try:
             subprocess.call(command)

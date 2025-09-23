@@ -28,13 +28,10 @@ This module uses the `ebook-convert` command from Calibre, so the application mu
 
 ## Configuration
 
-The module can be configured in two ways:
-
-- Command line parameters (to decide its fundamental behaviour)
+The module can be configured with command line parameters:
 
 ```bash
-uv run main.py -h                                                                                                                                                                                                       antonio.fasolato@IT-IT00058
-usage: py-link-sender [-h] [-k CREATE_API_KEY] [-d]
+usage: py-link-sender [-h] [-k CREATE_API_KEY] [-d] [-c CALIBRE_PATH] [-s SQLITE_PATH] [-e EPUB_OUTPUT_PATH] [-m MOBI_OUTPUT_PATH]
 
 A script to convert links to Epub and Moby files
 
@@ -43,17 +40,19 @@ options:
   -k CREATE_API_KEY, --create-api-key CREATE_API_KEY
                         Create a new api key
   -d, --develop         Start with development configuration (verbose logging, and automatic API documentation)
+  -c CALIBRE_PATH, --calibre-path CALIBRE_PATH
+                        The calibre bin path (on MacOS it should be something like `/Applications/calibre.app/Contents/MacOS/ebook-convert`). Default is empty
+  -s SQLITE_PATH, --sqlite-path SQLITE_PATH
+                        The application database path. Default is the current directory.
+  -e EPUB_OUTPUT_PATH, --epub-output-path EPUB_OUTPUT_PATH
+                        The folder path where to generate EPUB files. Default is the current directory.
+  -m MOBI_OUTPUT_PATH, --mobi-output-path MOBI_OUTPUT_PATH
+                        The folder path where to generate MOBI files. Default is the current directory.
 
-Copyright Antonio Fasolato 2025
+The behaviour of the application can be controlled with the following environment variables: CALIBRE_CONVERT_PATH - The calibre bin path (on MacOS it should be something like `/Applications/calibre.app/Contents/MacOS/ebook-convert - Default is empty), SQLITE_PATH - The sqlite
+database location (important for Docker installations - Default is the current directory), EPUB_OUTPUT_DIRECTORY - The directory where the EPUB files will be created. (Default is the current directory), MOBI_OUTPUT_DIRECTORY - The directory where the MOBI files will be created.
+(Default is the current directory)
 ```
-
-- Environment variables (to change its behaviour)
-  - `CALIBRE_CONVERT_PATH` - The calibre bin path (on MacOS it should be something like `/Applications/calibre.app/Contents/MacOS/ebook-convert`). Default is empty
-  - `SQLITE_PATH` - The sqlite database location (important for Docker installations). Default is the current directory.
-  - `EPUB_OUTPUT_DIRECTORY` - The directory where the EPUB files will be created. Default is the current directory.
-  - `MOBI_OUTPUT_DIRECTORY` - The directory where the MOBI files will be created. Default is the current directory.
-  - `UVICORN_HOST` - Unicorv host
-  - `UVICORN_PORT` - Unicorv port
 
 ## Starting the API
 
@@ -64,6 +63,8 @@ Some end points are authenticated, using an api-key. to generate a new api-key t
 ```bash
 uv run main.py -k user
 ```
+
+**NOTE**: The api-key is saved in the database, so the same `-s` parameter as the actual API should be used.
 
 ### Running the application
 
@@ -90,13 +91,10 @@ With the image ready, the module can be launched with:
 
 ```bash
 docker run -td --name py-link-convert \
-    -e SQLITE_PATH="/data/py-link-convert.sqlite" \
-    -e EPUB_OUTPUT_DIRECTORY="/data/output" \
-    -e MOBI_OUTPUT_DIRECTORY="/data/output" \
-    -v "$PWD/py-link-convert.sqlite:/data/py-link-convert.sqlite" \
-    -v py-link-convert-volume:/data/output \
+    -v py-link-convert-database:/data/db \
+    -v py-link-convert-output:/data/output \
     -p 8000:8000 \
-    py-link-convert <args>
+    py-link-convert -s "/data/db" -e "/data/output" -m "/data/output"
 ```
 
 `<args>` are optional and are the usual module arguments (`-d`, `-k` etc)
@@ -104,8 +102,12 @@ docker run -td --name py-link-convert \
 To generate a new api-key when the container is running, you can execute (supposing the running container is called py-link-convert)
 
 ```bash
-docker exec -ti py-link-convert uv run main.py -k user
+docker run -td --name py-link-convert-key \
+    -v py-link-convert-database:/data/db \
+    py-link-convert -s "/data/db" -k user
 ```
+
+**Note**: the database volume and path should be the same used by the other container, otherwise the api-key will be saved in another database
 
 ## URL Validation
 

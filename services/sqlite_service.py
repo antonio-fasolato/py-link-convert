@@ -1,30 +1,24 @@
 import sqlite3
 import logging
-import os
+import os.path
 from datetime import datetime
-from typing import Optional
 from models import ApiKey, LogUrl
 import secrets
 import string
 from typing import List
+from .command_line_parser_service import args
 
 logger = logging.getLogger(__name__)
-
 
 class SqliteService:
     """Service class for SQLite database operations"""
     
-    def __init__(self, db_path: Optional[str] = None):
+    def __init__(self):
         """
         Initialize the SQLite service
-        
-        Args:
-            db_path: Path to the SQLite database file. If None, uses SQLITE_PATH env var or default 'data.sqlite'
         """
-        if db_path is None:
-            self.db_path = os.getenv('SQLITE_PATH', 'data.sqlite')
-        else:
-            self.db_path = db_path
+
+        self.db_path = os.path.join(args.sqlite_path, 'py-link-convert.sql')
             
         logger.info(f"Initializing SQLite service with database path: {self.db_path}")
         self._initialize_database()

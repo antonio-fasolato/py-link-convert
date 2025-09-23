@@ -15,11 +15,7 @@ router = APIRouter()
 logger = logging.getLogger(__name__)
 
 # Epub service initialization
-epub_output_dir = os.getenv('EPUB_OUTPUT_DIRECTORY')
-if epub_output_dir:
-    epub_service = EpubService(output_directory=epub_output_dir)
-else:
-    epub_service = EpubService()
+epub_service = EpubService()
 
 # Html service initialization
 html_service = HtmlService()
@@ -27,11 +23,7 @@ html_service = HtmlService()
 # SQLite service initialization
 sqlite_service = SqliteService()
 
-mobi_output_dir = os.getenv('MOBI_OUTPUT_DIRECTORY')
-if mobi_output_dir:
-    mobi_service = MobiService(output_directory=mobi_output_dir)
-else:
-    mobi_service = MobiService()
+mobi_service = MobiService()
 
 @router.post("/url-to-epub", response_model=URLResponse)
 async def url_to_epub(request: URLRequest, tenant: Tenant = Depends(handle_api_key)):

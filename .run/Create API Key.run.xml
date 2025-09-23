@@ -3,6 +3,8 @@
     <option name="args">
       <list>
         <option value="-d" />
+        <option value="-s" />
+        <option value="$USER_HOME$/tmp" />
         <option value="-k" />
         <option value="tony" />
       </list>

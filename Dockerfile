@@ -3,8 +3,6 @@ RUN pip install --no-cache-dir uv
 
 RUN apt-get update && apt-get install -y wget calibre && rm -rf /var/lib/apt/lists/*
 
-ENV CALIBRE_CONVERT_PATH=/usr/bin/ebook-convert
-
 WORKDIR /app
 
 COPY pyproject.toml uv.lock* ./
@@ -13,4 +11,4 @@ RUN uv sync --locked --all-extras
 
 # Copy the remainder of the application code
 COPY . .
-ENTRYPOINT ["uv", "run", "main.py"]
+ENTRYPOINT ["uv", "run", "main.py", "-c", "/usr/bin/ebook-convert"]
